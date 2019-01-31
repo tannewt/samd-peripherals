@@ -34,8 +34,8 @@
 void turn_on_external_interrupt_controller(void) {
     MCLK->APBAMASK.bit.EIC_ = true;
 
-    // We use the 48mhz clock to lightly filter the incoming pulse to reduce spurious interrupts.
-    connect_gclk_to_peripheral(GCLK_PCHCTRL_GEN_GCLK1_Val, EIC_GCLK_ID);
+    // We use the 2mhz clock to lightly filter the incoming pulse to reduce spurious interrupts.
+    connect_gclk_to_peripheral(GCLK_PCHCTRL_GEN_GCLK5_Val, EIC_GCLK_ID);
     eic_set_enable(true);
 }
 
@@ -71,7 +71,6 @@ void eic_reset(void) {
     // This won't actually block long enough in Rev A of SAMD51 and will miss edges in the first
     // three cycles of the peripheral clock. See the errata for details. It shouldn't impact us.
     for (int i = 0; i < EIC_EXTINT_NUM; i++) {
-        set_eic_channel_data(i, NULL);
         NVIC_DisableIRQ(EIC_0_IRQn + i);
         NVIC_ClearPendingIRQ(EIC_0_IRQn + i);
     }
@@ -79,8 +78,7 @@ void eic_reset(void) {
 
 bool eic_channel_free(uint8_t eic_channel) {
     uint32_t mask = 1 << eic_channel;
-    return get_eic_channel_data(eic_channel) == NULL &&
-           (EIC->INTENSET.bit.EXTINT & mask) == 0 &&
+    return (EIC->INTENSET.bit.EXTINT & mask) == 0 &&
            (EIC->EVCTRL.bit.EXTINTEO & mask) == 0;
 }
 
