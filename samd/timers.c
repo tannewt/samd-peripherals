@@ -122,9 +122,9 @@ void TCC2_Handler(void) {
 }
 // TC0 - TC2 only exist on the SAMD51
 #ifdef TC0
-void TC0_Handler(void) {
-    shared_timer_handler(true, 0);
-}
+// void TC0_Handler(void) {
+//     shared_timer_handler(true, 0);
+// }
 #endif
 #ifdef TC1
 void TC1_Handler(void) {
@@ -139,9 +139,9 @@ void TC2_Handler(void) {
 void TC3_Handler(void) {
     shared_timer_handler(true, 3 - TC_OFFSET);
 }
-void TC4_Handler(void) {
-    shared_timer_handler(true, 4 - TC_OFFSET);
-}
+// void TC4_Handler(void) {
+//     shared_timer_handler(true, 4 - TC_OFFSET);
+// }
 void TC5_Handler(void) {
     shared_timer_handler(true, 5 - TC_OFFSET);
 }
